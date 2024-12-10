@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import Job from './Job'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { showButton } from '../redux/actions'
 
 const CompanySearchResults = () => {
+  const dispatch = useDispatch()
   const [jobs, setJobs] = useState([])
   const params = useParams()
 
@@ -12,8 +15,11 @@ const CompanySearchResults = () => {
 
   useEffect(() => {
     getJobs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    dispatch(showButton(true, false))
+  }, [dispatch])
 
   const getJobs = async () => {
     try {
@@ -34,6 +40,9 @@ const CompanySearchResults = () => {
       <Row>
         <Col className="my-3">
           <h1 className="display-4">Job posting for: {params.company}</h1>
+          <Link to="/">
+            <h5>Return to home</h5>
+          </Link>
           {jobs.map((jobData) => (
             <Job key={jobData._id} data={jobData} />
           ))}
